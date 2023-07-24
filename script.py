@@ -29,7 +29,6 @@ class Deck:
         return self.cards.pop(0)
     
 class Player:
-
     hand = []
     wager = 0
 
@@ -37,12 +36,23 @@ class Player:
         self.amount = amount
 
     def __repr__(self):
-        parts = self.hand
+        parts = [f'Player\'s hand: '] + self.hand
         parts.append(f'Wager: {self.wager}, ')
         parts.append(f'Money left: {self.amount}')
+        return ' '.join(parts)
+
+class Dealer:
+    hand = []
+    limit = 17
+
+    def __repr__(self):
+        parts = ['Dealer\'s hand:'] + self.hand
+        parts.append(f'Dealer limit: {self.limit}')
         return ' '.join(parts)
 
 deck = Deck()
 player = Player(100)
 
+dealer = Dealer()
+print(dealer)
 print(player)
