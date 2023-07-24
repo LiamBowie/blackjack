@@ -36,7 +36,8 @@ class Player:
         self.amount = amount
 
     def __repr__(self):
-        parts = [f'Player\'s hand: '] + self.hand
+        parts = [f'Player\'s hand: ']
+        parts.extend(f'{card}' for card in self.hand)
         parts.append(f'Wager: {self.wager}, ')
         parts.append(f'Money left: {self.amount}')
         return ' '.join(parts)
@@ -46,13 +47,36 @@ class Dealer:
     limit = 17
 
     def __repr__(self):
-        parts = ['Dealer\'s hand:'] + self.hand
+        parts = ['Dealer\'s hand: ']
+        parts.extend(f'{card}' for card in self.hand)
         parts.append(f'Dealer limit: {self.limit}')
         return ' '.join(parts)
+    
+class Game():
+    def __init__(self, deck:Deck, dealer:Dealer, players:list):
+        self.deck = deck
+        self.dealer = dealer
+        self.players = players
+    
+    def deal_cards(self):
+        for i in range(2):
+            for player in self.players:
+                player.hand.append(self.deck.draw())
+            dealer.hand.append(self.deck.draw())
+        
+    def __repr__(self):
+        parts = [f'{self.dealer}']
+        parts.extend(f'{player}' for player in self.players)
+        return '\n'.join(parts)
+
+
 
 deck = Deck()
 player = Player(100)
-
 dealer = Dealer()
-print(dealer)
-print(player)
+game = Game(deck, dealer, [player])
+
+deck.shuffle()
+game.deal_cards()
+
+print(game)
