@@ -27,11 +27,22 @@ class Deck:
     
     def draw(self):
         return self.cards.pop(0)
+    
+class Player:
+
+    hand = []
+    wager = 0
+
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __repr__(self):
+        parts = self.hand
+        parts.append(f'Wager: {self.wager}, ')
+        parts.append(f'Money left: {self.amount}')
+        return ' '.join(parts)
 
 deck = Deck()
+player = Player(100)
 
-print(deck)
-deck.shuffle()
-print(deck)
-for i in range(5):
-    print(deck.draw())
+print(player)
