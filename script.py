@@ -9,8 +9,8 @@ class Card:
         return f'{self.value}{self.suit[0]}'
     
 class Deck:
-    suits = ['Spades', 'Clubs', 'Hearts', 'Diamonds']
-    values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+    suits = ['Hearts', 'Clubs', 'Diamonds', 'Spades']
+    values = ['K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A']
 
     def __init__(self):
         self.cards = [Card(value, suit) for suit in self.suits for value in self.values]
@@ -24,8 +24,14 @@ class Deck:
     
     def shuffle(self):
         random.shuffle(self.cards)
+    
+    def draw(self):
+        return self.cards.pop(0)
 
 deck = Deck()
+
 print(deck)
 deck.shuffle()
 print(deck)
+for i in range(5):
+    print(deck.draw())
