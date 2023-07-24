@@ -48,7 +48,7 @@ class Player:
         parts = [f'Hand:']
         parts.extend(f'{card}' for card in self.hand)
         parts.append(f'Wager: {self.wager}, ')
-        parts.append(f'Money left: {self.amount}')
+        parts.append(f'Money left: {self.money_left}')
         return ' '.join(parts)
 
     def show_hand(self):
@@ -77,19 +77,29 @@ class Dealer:
     hand = []
     limit = 17
 
+    def __repr__(self):
+        parts = ['Hand:']
+        parts.extend(f'{card}' for card in self.hand)
+        parts.append(f'Dealer limit: {self.limit}')
+        return ' '.join(parts)
+    
     def show_hand(self):
         return f'Dealer\'s hand: ?? {self.hand[1]}'
+
+    def add_card(self, card):
+        self.hand.append(card)
     
     def reveal_hand(self):
         parts = [f'Dealer\'s hand:']
         parts.extend(f'{card}' for card in self.hand)
         return ' '.join(parts)
 
-    def __repr__(self):
-        parts = ['Hand:']
-        parts.extend(f'{card}' for card in self.hand)
-        parts.append(f'Dealer limit: {self.limit}')
-        return ' '.join(parts)
+    def get_hand_value(self):
+        hand_value = 0
+        for card in self.hand:
+            hand_value += card.get_numerical_value()
+
+        return hand_value
     
 class Game():
     def __init__(self, deck:Deck, dealer:Dealer, players:list):
@@ -108,7 +118,7 @@ class Game():
         print(player.hand)
         
     def __repr__(self):
-        parts = [f'{self.deck}']
+        parts = []
         parts.append(f'Dealer\'s {self.dealer}')
         for i, player in enumerate(self.players):
             parts.append(f'Player {i+1}\'s {player}')
@@ -196,3 +206,30 @@ for i, player in enumerate(game.players):
 
         first_turn = False
     
+print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
+
+while dealer.get_hand_value() < dealer.limit:
+    game.twist(dealer)
+    print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
+
+if dealer.get_hand_value() > 21:
+    print('Dealer bust')
+    
+    for player in game.players:
+        if not player.bust:
+            player.money_left += player.wager*2
+
+for player in game.players:
+    if player.bust:
+        continue
+
+    if dealer.get_hand_value() < player.get_hand_value():
+        print('player wins')
+        player.money_left += player.wager*2
+    else:
+        print('dealer wins')
+
+for player in game.players:
+    player.wager = 0
+
+print(game)
