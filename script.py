@@ -40,7 +40,7 @@ game.deal_cards()
 for i, player in enumerate(game.players):
     print(f'Player {i+1}: {player.hand}')
 
-print(dealer.show_hand())
+print(dealer.show_one_card())
 
 # Player's take their turns 
 for i, player in enumerate(game.players):
@@ -90,11 +90,11 @@ for i, player in enumerate(game.players):
         first_turn = False
 
 # Dealer's turn
-print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
+print(f'{dealer.show_hand()} Value: {dealer.get_hand_value()}')
 
 while dealer.get_hand_value() < dealer.limit:
     game.twist(dealer)
-    print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
+    print(f'{dealer.show_hand()} Value: {dealer.get_hand_value()}')
 
 
 # Resolve the round 
