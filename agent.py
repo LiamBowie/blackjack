@@ -2,7 +2,7 @@ from abc import ABC
 
 class agent(ABC): 
     def __init__(self):
-        self.hand = []
+        self.__hand = []
         self.__bust = False
 
     @property
@@ -13,9 +13,16 @@ class agent(ABC):
     @bust.setter
     def bust(self, bust):
         self.__bust = bust
-
+    
+    @property
+    def hand(self):
+        return self.__hand
+        
     def add_card(self, card):
         self.hand.append(card)
+
+    def reset_hand(self):
+        self.__hand = []
 
     def get_hand_value(self):
         hand_value = 0
@@ -25,14 +32,9 @@ class agent(ABC):
         return hand_value
     
     def show_hand(self):
-        parts = [f'{card}' for card in self.hand]
+        parts = [f'{card}' for card in self.__hand]
         parts.append(f'Value: {self.get_hand_value()}')
         return ', '.join(parts)
-    
-    def __repr__(self):
-        parts = [f'Hand:']
-        parts.extend(f'{card}' for card in self.hand)
-        return ' '.join(parts)
 
 class Player(agent):
 
@@ -81,6 +83,4 @@ class Dealer(agent):
         return ' '.join(parts)
     
     def show_one_card(self):
-        return f'Dealer\'s hand: ?? {self.hand[1]}'
-
-
+        return f'Dealer\'s hand: {self.hand[1]}'

@@ -4,8 +4,7 @@ from agent import Dealer, Player
 class Game():
     __actions = ['twist', 'stand', 'double down']
 
-    def __init__(self, deck:Deck, dealer:Dealer, players:list):
-        self.deck = deck
+    def __init__(self, dealer:Dealer, players:list):
         self.dealer = dealer
         self.players = players
 
@@ -15,6 +14,8 @@ class Game():
         return self.__actions
 
     def deal_cards(self):
+        self.deck = Deck()
+        self.deck.shuffle()
         for i in range(2):
             for player in self.players:
                 player.hand.append(self.deck.draw())
@@ -48,32 +49,45 @@ class Game():
             return False
         
     def resolve_hand(self, dealer:Dealer, player:Player):
+        player_hand = player.get_hand_value()
+        dealer_hand = dealer.get_hand_value()
+        
+        player.reset_hand()
+        dealer.reset_hand()
         # Player wins with Blackjack
-        if player.get_hand_value() == 21 and not dealer.get_hand_value() == 21:
+        if player_hand == 21 and not dealer_hand == 21:
+            print('Player wins with Blackjack!')
             player.bet *= 1.5
             player.money_left += player.bet
             return player.money_left
         
         # Player busts. Dealer wins 
         if player.bust:
+            print('Player busts. Dealer wins!')
             player.money_left -= player.bet
+            player.bust = False
             return player.money_left
         
         # Dealer busts. Player wins
         if dealer.bust:
+            print('Dealer busts. Player wins!')
             player.money_left += player.bet
+            dealer.bust = False
             return player.money_left
         
         # Nobody wins. The bet is returned
-        if player.get_hand_value() == dealer.get_hand_value():
+        if player_hand == dealer_hand:
+            print('It\'s a push! The bet is returned.')
             return player.money_left
         
         # Player wins
-        if player.get_hand_value() > dealer.get_hand_value():
+        if player_hand > dealer_hand:
+            print('Player wins!')
             player.money_left += player.bet
             return player.money_left
         # Dealer wins
         else:
+            print('Dealer wins!')
             player.money_left -= player.bet
             return player.money_left
 
