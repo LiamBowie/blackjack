@@ -1,7 +1,8 @@
-from deck import Deck
+from deck import Card
 from agent import Dealer, Player
 from game import Game
 from time import sleep
+
 
 # Functions 
 def sanitize(input):
@@ -66,15 +67,19 @@ while people_at_the_table:
 
     # Resolve the round 
     for i, current_player in enumerate(game.players):
+        current_player.hand = [Card('A', 'Spade'), Card('J', 'Hearts')]
+        print(len(current_player.hand))
         current_player_balance = game.resolve_hand(dealer, current_player)
         if current_player_balance == 0:
             print('You\'re out of money!')
             game.players.remove(current_player)
         current_player.bet = 0
         print(f'Player {i+1} money left: {current_player_balance}')
-    
+
+    # Reset dealer's bust flag
+    dealer.bust = False
     exit_phrase = 'exit'
     leaving = sanitize(input(f'Player {i+1}: Type "{exit_phrase}" to leave the table: '))
 
     if leaving == exit_phrase:
-        people_at_the_table == False
+        people_at_the_table = False

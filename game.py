@@ -50,12 +50,14 @@ class Game():
         
     def resolve_hand(self, dealer:Dealer, player:Player):
         player_hand = player.get_hand_value()
+        player_blackjack = True if player_hand == 21 and len(player.hand) == 2 else False
         dealer_hand = dealer.get_hand_value()
+        dealer_blackjack = True if dealer_hand == 21 and len(dealer.hand) == 2 else False
         
         player.reset_hand()
         dealer.reset_hand()
         # Player wins with Blackjack
-        if player_hand == 21 and not dealer_hand == 21:
+        if player_blackjack and not dealer_blackjack:
             print('Player wins with Blackjack!')
             player.bet *= 1.5
             player.money_left += player.bet
@@ -72,7 +74,6 @@ class Game():
         if dealer.bust:
             print('Dealer busts. Player wins!')
             player.money_left += player.bet
-            dealer.bust = False
             return player.money_left
         
         # Nobody wins. The bet is returned
@@ -97,3 +98,4 @@ class Game():
         for i, player in enumerate(self.players):
             parts.append(f'Player {i+1}\'s {player}')
         return '\n'.join(parts)
+

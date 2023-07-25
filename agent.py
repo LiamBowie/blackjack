@@ -17,6 +17,10 @@ class agent(ABC):
     @property
     def hand(self):
         return self.__hand
+    
+    @hand.setter
+    def hand(self, hand:list):
+        self.__hand = hand
         
     def add_card(self, card):
         self.hand.append(card)
