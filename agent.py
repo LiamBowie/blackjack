@@ -1,9 +1,18 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 class agent(ABC): 
     def __init__(self):
         self.hand = []
-        self.bust = False
+        self.__bust = False
+
+    @property
+    def bust(self):
+        '''True if player's hand value is 2 or less. False if otherwise. '''
+        return self.__bust
+    
+    @bust.setter
+    def bust(self, bust):
+        self.__bust = bust
 
     def add_card(self, card):
         self.hand.append(card)
@@ -17,7 +26,13 @@ class agent(ABC):
     
     def show_hand(self):
         parts = [f'{card}' for card in self.hand]
+        parts.append(f'Value: {self.get_hand_value()}')
         return ', '.join(parts)
+    
+    def __repr__(self):
+        parts = [f'Hand:']
+        parts.extend(f'{card}' for card in self.hand)
+        return ' '.join(parts)
 
 class Player(agent):
 
@@ -40,7 +55,7 @@ class Player(agent):
     
     @wager.setter
     def wager(self, wager):
-        if wager < self.money_left and wager >= 0:
+        if wager <= self.money_left and wager >= 0:
             self.__wager = wager
         else:
             raise ValueError

@@ -1,6 +1,7 @@
 from deck import Deck
 from agent import Dealer, Player
 from game import Game
+import os
 
 # Functions 
 def sanitize(input):
@@ -11,7 +12,7 @@ deck = Deck()
 player1 = Player(100)
 player2 = Player(250)
 dealer = Dealer()
-game = Game(deck, dealer, [player1])
+game = Game(deck, dealer, [player1, player2])
 
 # First hand starts
 deck.shuffle()
@@ -19,17 +20,12 @@ deck.shuffle()
 # Placing bets 
 for i, player in enumerate(game.players):
     placing_bet = True
-    wager = 0
     while placing_bet: 
         try:
             wager = int(sanitize(input(f'Player {i+1}. You have {player.money_left}. How much would you like to wager?: ')))
             player.wager = wager
         except ValueError:
-            print('You must enter a number.')
-            continue
-
-        if wager == -1:
-            print('Please bet an acceptable amount.')
+            print('You must enter an number that is less than the money you have left and more than 0.')
             continue
 
         placing_bet = False
@@ -37,54 +33,28 @@ for i, player in enumerate(game.players):
 # Hands are dealt
 game.deal_cards()
 for i, player in enumerate(game.players):
-    print(f'Player {i+1}: {player.hand}')
+    print(f'Player {i+1}: {player.show_hand()}')
 
 print(dealer.show_one_card())
 
 # Player's take their turns 
-for i, player in enumerate(game.players):
+for i, current_player in enumerate(game.players):
     
-    print(f'Player {i+1}: {player.show_hand()} {player.get_hand_value()}')
-    available_actions = ['twist', 'stand', 'double down']
-
     first_turn = True
-    while player.get_hand_value() <= 21:
-
-        if player.get_hand_value() == 21:
+    playing = True
+    while playing:
+        print(f'Player {i+1}: {current_player.show_hand()}')
+        if current_player.get_hand_value() == 21:
             print('Blackjack!')
             break
 
         action = sanitize(input(f'Player {i+1}. Would you like to Twist, Stand, or Double Down?: '))
 
-        if action not in available_actions:
+        if action not in game.actions:
             print('Please enter "twist" "stand", or "double down".')
             continue
 
-        if action == 'double down' and first_turn:
-            try:
-                player.wager *= 2
-            except ValueError:
-                print('You do not have enough money to double down.')
-                continue
-
-            game.twist(player)
-            if player.get_hand_value() > 21:
-                print('You\'re bust')
-                player.bust = True
-            break
-
-        elif action == 'double down' and not first_turn:
-            print('You can only double down on your first action.')
-
-        if action == 'twist':
-            game.twist(player)
-            if player.get_hand_value() > 21:
-                print('You\'re bust')
-                player.bust = True
-                break
-
-        if action == 'stand':
-            break
+        playing = game.handle_action(current_player, action, first_turn)
 
         first_turn = False
 
