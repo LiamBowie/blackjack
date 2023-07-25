@@ -24,7 +24,6 @@ for i, player in enumerate(game.players):
         try:
             wager = int(sanitize(input(f'Player {i+1}. You have {player.money_left}. How much would you like to wager?: ')))
             player.wager = wager
-            wager = player.place_bet(player.wager)
         except ValueError:
             print('You must enter a number.')
             continue
@@ -62,9 +61,9 @@ for i, player in enumerate(game.players):
             continue
 
         if action == 'double down' and first_turn:
-            approved = player.place_bet(player.wager)
-
-            if approved == -1:
+            try:
+                player.wager *= 2
+            except ValueError:
                 print('You do not have enough money to double down.')
                 continue
 
@@ -103,17 +102,20 @@ if dealer.get_hand_value() > 21:
     
     for player in game.players:
         if not player.bust:
-            player.money_left += player.wager*2
+            player.money_left += player.wager
 
 for player in game.players:
     if player.bust:
+        player.money_left -= player.wager
         continue
 
     if dealer.get_hand_value() < player.get_hand_value():
         print('player wins')
-        player.money_left += player.wager*2
+        player.money_left += player.wager
     else:
         print('dealer wins')
+        player.money_left -= player.wager
+
 
 for player in game.players:
     player.wager = 0
