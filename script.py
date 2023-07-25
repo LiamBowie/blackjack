@@ -2,9 +2,11 @@ from deck import Deck
 from agent import Dealer, Player
 from game import Game
 
+# Functions 
 def sanitize(input):
     return input.strip().lower()
 
+# Game set up
 deck = Deck()
 player1 = Player(100)
 player2 = Player(250)
@@ -14,6 +16,7 @@ game = Game(deck, dealer, [player1])
 # First hand starts
 deck.shuffle()
 
+# Placing bets 
 for i, player in enumerate(game.players):
     placing_bet = True
     wager = 0
@@ -32,12 +35,14 @@ for i, player in enumerate(game.players):
 
         placing_bet = False
 
+# Hands are dealt
 game.deal_cards()
 for i, player in enumerate(game.players):
     print(f'Player {i+1}: {player.hand}')
 
 print(dealer.show_hand())
 
+# Player's take their turns 
 for i, player in enumerate(game.players):
     
     print(f'Player {i+1}: {player.show_hand()} {player.get_hand_value()}')
@@ -83,13 +88,16 @@ for i, player in enumerate(game.players):
             break
 
         first_turn = False
-    
+
+# Dealer's turn
 print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
 
 while dealer.get_hand_value() < dealer.limit:
     game.twist(dealer)
     print(f'{dealer.reveal_hand()} Value: {dealer.get_hand_value()}')
 
+
+# Resolve the round 
 if dealer.get_hand_value() > 21:
     print('Dealer bust')
     
