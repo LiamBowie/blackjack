@@ -31,7 +31,7 @@ class Game():
         '''Resolves an agents action. Returns a Boolean that indicates whether their turn is still in progress'''
         if action == 'double down' and first_turn_flag:
             try:
-                player.wager *= 2
+                player.bet *= 2
             except ValueError:
                 print('You do not have enough money to double down.')
 
@@ -47,6 +47,35 @@ class Game():
         if action == 'stand':
             return False
         
+    def resolve_hand(self, dealer:Dealer, player:Player):
+        # Player wins with Blackjack
+        if player.get_hand_value() == 21 and not dealer.get_hand_value() == 21:
+            player.bet *= 1.5
+            player.money_left += player.bet
+            return player.money_left
+        
+        # Player busts. Dealer wins 
+        if player.bust:
+            player.money_left -= player.bet
+            return player.money_left
+        
+        # Dealer busts. Player wins
+        if dealer.bust:
+            player.money_left += player.bet
+            return player.money_left
+        
+        # Nobody wins. The bet is returned
+        if player.get_hand_value() == dealer.get_hand_value():
+            return player.money_left
+        
+        # Player wins
+        if player.get_hand_value() > dealer.get_hand_value():
+            player.money_left += player.bet
+            return player.money_left
+        # Dealer wins
+        else:
+            player.money_left -= player.bet
+            return player.money_left
 
     def __repr__(self):
         parts = []

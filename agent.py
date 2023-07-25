@@ -39,24 +39,24 @@ class Player(agent):
     def __init__(self, amount):
         super().__init__()
         self.__money_left = amount
-        self.__wager = 0
+        self.__bet = 0
 
     def __repr__(self):
         parts = [f'Hand:']
         parts.extend(f'{card}' for card in self.hand)
-        parts.append(f'Wager: {self.wager}, ')
+        parts.append(f'Bet: {self.bet}, ')
         parts.append(f'Money left: {self.money_left}')
         return ' '.join(parts)
 
     @property
-    def wager(self):
+    def bet(self):
         '''The amount of money a player is betting on a hand'''
-        return self.__wager
+        return self.__bet
     
-    @wager.setter
-    def wager(self, wager):
-        if wager <= self.money_left and wager >= 0:
-            self.__wager = wager
+    @bet.setter
+    def bet(self, bet):
+        if bet <= self.money_left and bet >= 0:
+            self.__bet = bet
         else:
             raise ValueError
     

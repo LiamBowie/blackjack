@@ -22,8 +22,8 @@ for i, player in enumerate(game.players):
     placing_bet = True
     while placing_bet: 
         try:
-            wager = int(sanitize(input(f'Player {i+1}. You have {player.money_left}. How much would you like to wager?: ')))
-            player.wager = wager
+            bet = int(sanitize(input(f'Player {i+1}. You have {player.money_left}. How much would you like to bet?: ')))
+            player.bet = bet
         except ValueError:
             print('You must enter an number that is less than the money you have left and more than 0.')
             continue
@@ -65,29 +65,8 @@ while dealer.get_hand_value() < dealer.limit:
     game.twist(dealer)
     print(f'{dealer.show_hand()} Value: {dealer.get_hand_value()}')
 
-
 # Resolve the round 
-if dealer.get_hand_value() > 21:
-    print('Dealer bust')
-    
-    for player in game.players:
-        if not player.bust:
-            player.money_left += player.wager
-
-for player in game.players:
-    if player.bust:
-        player.money_left -= player.wager
-        continue
-
-    if dealer.get_hand_value() < player.get_hand_value():
-        print('player wins')
-        player.money_left += player.wager
-    else:
-        print('dealer wins')
-        player.money_left -= player.wager
-
-
-for player in game.players:
-    player.wager = 0
-
-print(game)
+for i, current_player in enumerate(game.players):
+    current_player_balance = game.resolve_hand(dealer, current_player)
+    current_player.bet = 0
+    print(f'Player {i+1} money left: {current_player_balance}')
