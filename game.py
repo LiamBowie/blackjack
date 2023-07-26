@@ -24,7 +24,12 @@ class Game():
     def twist(self, player:Player):
         '''Adds a card to the players hand. Returns whether the new card busts them or not'''
         player.add_card(self.deck.draw())
+
         if player.get_hand_value() > 21:
+            for card in player.hand:
+                if card.value == 11:
+                    card.value = 1
+                    return player.bust
             player.bust = True
         return player.bust
 
@@ -60,7 +65,7 @@ class Game():
         if player_blackjack and not dealer_blackjack:
             print('Player wins with Blackjack!')
             player.bet *= 1.5
-            player.money_left += player.bet
+            player.money_left += round(player.bet)
             return player.money_left
         
         # Player busts. Dealer wins 

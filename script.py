@@ -1,4 +1,3 @@
-from deck import Card
 from agent import Dealer, Player
 from game import Game
 
@@ -60,13 +59,11 @@ while people_at_the_table:
 
     # Player's take their turns 
     for current_player in game.players:
-        
         first_turn = True
         playing = True
         while playing:
             print(f'Player {current_player.id}: {current_player.show_hand()}')
             if current_player.get_hand_value() == 21:
-                print('Blackjack!')
                 break
 
             action = sanitize(input(f'Player {current_player.id}. Would you like to Twist, Stand, or Double Down?: '))

@@ -2,15 +2,25 @@ import random
 
 class Card:
     def __init__(self, value, suit):
-        self.value = value
+        self.__value = value
         self.suit = suit
+
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, new_value):
+        self.__value = new_value
 
     def __repr__(self):
         return f'{self.value} {self.suit}'
     
-    def get_numerical_value(self):
-        if self.value == 'A':
+    def get_numerical_value(self, soft_ace):
+        if self.value == 'A' and soft_ace:
             return 11
+        elif self.value == 'A' and not soft_ace:
+            return 1
         elif self.value == 'K' or self.value == 'Q' or self.value == 'J':
             return 10
         else:
