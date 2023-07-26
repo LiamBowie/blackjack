@@ -75,7 +75,7 @@ while people_at_the_table:
     # Reset dealer's bust flag
     dealer.bust = False
     exit_phrase = 'exit'
-    leaving = sanitize(input(f'Player {i+1}: Type "{exit_phrase}" to leave the table: '))
+    leaving = sanitize(input(f'Type "{exit_phrase}" to leave the table: '))
 
     if leaving == exit_phrase:
         people_at_the_table = False
