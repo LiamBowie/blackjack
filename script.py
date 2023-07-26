@@ -1,7 +1,6 @@
 from deck import Card
 from agent import Dealer, Player
 from game import Game
-from time import sleep
 
 
 # Functions 
@@ -63,12 +62,9 @@ while people_at_the_table:
     while dealer.get_hand_value() < dealer.limit:
         game.twist(dealer)
         print(f'Dealer. {dealer.show_hand()}')
-        sleep(1)
 
     # Resolve the round 
     for i, current_player in enumerate(game.players):
-        current_player.hand = [Card('A', 'Spade'), Card('J', 'Hearts')]
-        print(len(current_player.hand))
         current_player_balance = game.resolve_hand(dealer, current_player)
         if current_player_balance == 0:
             print('You\'re out of money!')
