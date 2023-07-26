@@ -41,11 +41,14 @@ class agent(ABC):
         return ', '.join(parts)
 
 class Player(agent):
+    __id = 1
 
     def __init__(self, amount):
         super().__init__()
         self.__money_left = amount
         self.__bet = 0
+        self.__id = Player.__id
+        Player.__id += 1
 
     def __repr__(self):
         parts = [f'Hand:']
@@ -53,7 +56,16 @@ class Player(agent):
         parts.append(f'Bet: {self.bet}, ')
         parts.append(f'Money left: {self.money_left}')
         return ' '.join(parts)
-
+    
+    @property
+    def id(self):
+        '''Unique id of each player'''
+        return f'{self.__id}'
+    
+    # @id.setter
+    # def id(self):
+    #     self.id  = Player.id
+    
     @property
     def bet(self):
         '''The amount of money a player is betting on a hand'''
@@ -86,5 +98,5 @@ class Dealer(agent):
         parts.append(f'Dealer limit: {self.limit}')
         return ' '.join(parts)
     
-    def show_one_card(self):
-        return f'Dealer\'s hand: {self.hand[1]}'
+    def show_upcard(self):
+        return f'Dealer  : {self.hand[1]}'
