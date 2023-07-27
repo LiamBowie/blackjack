@@ -63,6 +63,13 @@ class Game():
             print(f'Player {player.id} wins with Blackjack!')
             print(player.show_hand(index))
             print(f'Chips left: {player.chips} (+{player.bet[index]})')
+
+        if dealer_blackjack and not player_blackjack:
+            player.chips -= player.bet[index]
+
+            print(f'Dealer wins with Blackjack! Player {player.id} loses')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (-{player.bet[index]})')
         
         # Player busts. Dealer wins 
         if player.bust:
