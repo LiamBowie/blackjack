@@ -33,14 +33,13 @@ class Game():
         '''Resolves an agents action. Returns a Boolean that indicates whether their turn is still in progress'''
         if action == 'split':
             player.split(hand_index)
-
             player.add_card(self.deck.draw(), -1)
             player.add_card(self.deck.draw(), hand_index)
 
             return True
 
         if action == 'double down':
-            player.bet *= 2
+            player.increase_bet(hand_index, player.bet[hand_index])
             self.twist(player, hand_index)
             return False 
 
@@ -61,21 +60,21 @@ class Game():
         # Player wins with Blackjack
         if player_blackjack and not dealer_blackjack:
             print('Player wins with Blackjack!')
-            player.bet *= 1.5
-            player.chips += round(player.bet)
+            player.bet[index] *= 1.5
+            player.chips += round(player.bet[index])
             return player.chips
         
         # Player busts. Dealer wins 
         if player.bust:
             print('Player busts. Dealer wins!')
-            player.chips -= player.bet
+            player.chips -= player.bet[index]
             player.bust = False
             return player.chips
         
         # Dealer busts. Player wins
         if dealer.bust:
             print('Dealer busts. Player wins!')
-            player.chips += player.bet
+            player.chips += player.bet[index]
             return player.chips
         
         # Nobody wins. The bet is returned
@@ -86,12 +85,12 @@ class Game():
         # Player wins
         if player_hand > dealer_hand:
             print('Player wins!')
-            player.chips += player.bet
+            player.chips += player.bet[index]
             return player.chips
         # Dealer wins
         else:
             print('Dealer wins!')
-            player.chips -= player.bet
+            player.chips -= player.bet[index]
             return player.chips
 
     def __repr__(self):

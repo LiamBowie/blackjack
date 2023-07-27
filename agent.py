@@ -65,9 +65,8 @@ class Player(agent):
 
     def __init__(self, amount):
         super().__init__()
-        self.__chips = amount
-        self.__initial_bet = 0
-        self.__bet = 0
+        self.chips = amount
+        self.bet = [0]
         self.actions = ['twist', 'stand']
         self.__id = Player.__id
         Player.__id += 1
@@ -84,47 +83,28 @@ class Player(agent):
         '''Unique id of each player'''
         return f'{self.__id}'
     
-    @property
-    def initial_bet(self):
-        return self.__initial_bet
-    
-    @initial_bet.setter
-    def initial_bet(self, bet):
-        self.__initial_bet = bet
-    
-    @property
-    def bet(self):
-        '''The amount of money a player is betting on a hand'''
-        return self.__bet
-    
-    @bet.setter
-    def bet(self, bet):
-        if bet <= self.chips and bet >= 0:
-            self.__bet = bet
-        else:
-            raise ValueError
-    
-    @property
-    def chips(self):
-        '''The amount of money a player has left to bet'''
-        return self.__chips
-    
-    @chips.setter
-    def chips(self, value):
-        self.__chips = value
-    
+    def increase_bet(self, index, raised):
+        if self.bet[index] <= self.chips and self.bet[index] >= 0:
+            self.bet[index] += raised
+          
     def list_available_actions(self, hand_index:int = 0, first_turn:bool = False):
         if first_turn:
-            if self.bet*2 <= self.chips:
+            if sum(self.bet) + self.bet[hand_index] <= self.chips:
                 self.actions.append('double down')
             
-            if self.hands[hand_index][0].value == self.hands[hand_index][1].value:
-                self.actions.append('split')
+                if self.hands[hand_index][0].value == self.hands[hand_index][1].value:
+                    self.actions.append('split')
         
         return self.actions
     
     def reset_actions(self):
         self.actions = ['twist', 'stand']
+
+    def split(self, hand_index):
+        # Run method from abstract parent class
+        super().split(hand_index)
+        # add a new bet associated with the new hand
+        self.bet.append(self.bet[hand_index])
 
 class Dealer(agent):
     def __init__(self, limit=17):

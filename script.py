@@ -43,8 +43,7 @@ while people_at_the_table:
         while placing_bet: 
             try:
                 bet = int(sanitize(input(f'Player {player.id}. You have {player.chips} chips left. How much would you like to bet?: ')))
-                player.initial_bet = bet
-                player.bet += player.initial_bet
+                player.bet = [bet]
             except ValueError:
                 print('You must enter an number that is less than the money you have left and more than 0.')
                 continue
@@ -67,7 +66,7 @@ while people_at_the_table:
             first_turn = True
             playing = True
             while playing:
-                print(f'Player {current_player.id} ({current_player.bet}): {current_player.show_hand(i)}')
+                print(f'Player {current_player.id} ({current_player.bet[i]}): {current_player.show_hand(i)}')
                 if current_player.get_hand_value(i) == 21:
                     print('Blackjack!') if first_turn else print('You\'ve hit 21!')
                     break
@@ -104,6 +103,7 @@ while people_at_the_table:
         for i in range(len(player.hands)):
             current_player_balance = game.resolve_hand(dealer, current_player, i-1)
             print(f'Player {current_player.id} money left: {current_player_balance}')
+            print(current_player.bet)
     
     print('================================================')
 
