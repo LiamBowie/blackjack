@@ -4,6 +4,7 @@ class agent(ABC):
     def __init__(self):
         self.__hands = [[]]
         self.__bust = False
+        self.actions = ['twist', 'stand']
 
     @property
     def bust(self):
@@ -28,39 +29,46 @@ class agent(ABC):
     def reset_hand(self):
         self.__hands = [[]]
 
-    def get_hand_value(self):
+    def get_hand_value(self, index:int = 0):
         hand_value = 0
         soft_ace = True
-        for hand in self.__hands:
-            for card in hand:
-                hand_value += card.get_numerical_value(soft_ace)
-                if card.value == 'A':
-                    soft_ace = False
-                if hand_value > 21 and not soft_ace:
-                    hand_value -= 10
+        for card in self.__hands[index]:
+            hand_value += card.get_numerical_value(soft_ace)
+            if card.value == 'A':
+                soft_ace = False
+            if hand_value > 21 and not soft_ace:
+                hand_value -= 10
 
         return hand_value
     
-    def show_hand(self):
+    def show_hand(self, index:int = 0):
         parts = []
-        for hand in self.__hands:
+        parts.extend(f'{card}' for card in self.__hands[index])
+        parts.append(f'Value: {self.get_hand_value(index)}')
+        return ', '.join(parts)
+
+    def show_hands(self):
+        parts = []
+        for i, hand in enumerate(self.__hands):
             parts.extend(f'{card}' for card in hand)
-            parts.append(f'Value: {self.get_hand_value()}')
+            parts.append(f'Value: {self.get_hand_value(i)}')
         return ', '.join(parts)
     
     def split(self, hand_index):
         # Move the second card of the indexed hand to a new hand at the end of the list of hands
         self.__hands.append([self.__hands[hand_index][1]])
         # Remove the split card from the initial hand
-        popped = self.__hands[hand_index].pop(1)
+        self.__hands[hand_index].pop(1)
 
 class Player(agent):
     __id = 1
 
     def __init__(self, amount):
         super().__init__()
-        self.__money_left = amount
+        self.__chips = amount
+        self.__initial_bet = 0
         self.__bet = 0
+        self.actions = ['twist', 'stand']
         self.__id = Player.__id
         Player.__id += 1
 
@@ -68,7 +76,7 @@ class Player(agent):
         parts = [f'Hand:']
         parts.extend(f'{card}' for card in self.hand)
         parts.append(f'Bet: {self.bet}, ')
-        parts.append(f'Money left: {self.money_left}')
+        parts.append(f'Chips left: {self.chips}')
         return ' '.join(parts)
     
     @property
@@ -76,9 +84,13 @@ class Player(agent):
         '''Unique id of each player'''
         return f'{self.__id}'
     
-    # @id.setter
-    # def id(self):
-    #     self.id  = Player.id
+    @property
+    def initial_bet(self):
+        return self.__initial_bet
+    
+    @initial_bet.setter
+    def initial_bet(self, bet):
+        self.__initial_bet = bet
     
     @property
     def bet(self):
@@ -87,19 +99,32 @@ class Player(agent):
     
     @bet.setter
     def bet(self, bet):
-        if bet <= self.money_left and bet >= 0:
+        if bet <= self.chips and bet >= 0:
             self.__bet = bet
         else:
             raise ValueError
     
     @property
-    def money_left(self):
+    def chips(self):
         '''The amount of money a player has left to bet'''
-        return self.__money_left
+        return self.__chips
     
-    @money_left.setter
-    def money_left(self, value):
-        self.__money_left = value
+    @chips.setter
+    def chips(self, value):
+        self.__chips = value
+    
+    def list_available_actions(self, hand_index:int = 0, first_turn:bool = False):
+        if first_turn:
+            if self.bet*2 <= self.chips:
+                self.actions.append('double down')
+            
+            if self.hands[hand_index][0].value == self.hands[hand_index][1].value:
+                self.actions.append('split')
+        
+        return self.actions
+    
+    def reset_actions(self):
+        self.actions = ['twist', 'stand']
 
 class Dealer(agent):
     def __init__(self, limit=17):
@@ -114,3 +139,4 @@ class Dealer(agent):
     
     def show_upcard(self):
         return f'Dealer  : {self.hands[0][1]}'
+    

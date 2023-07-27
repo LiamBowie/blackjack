@@ -42,8 +42,9 @@ while people_at_the_table:
         placing_bet = True
         while placing_bet: 
             try:
-                bet = int(sanitize(input(f'Player {player.id}. You have {player.money_left}. How much would you like to bet?: ')))
-                player.bet = bet
+                bet = int(sanitize(input(f'Player {player.id}. You have {player.chips}. How much would you like to bet?: ')))
+                player.initial_bet = bet
+                player.bet += player.initial_bet
             except ValueError:
                 print('You must enter an number that is less than the money you have left and more than 0.')
                 continue
@@ -52,44 +53,62 @@ while people_at_the_table:
 
     # Hands are dealt
     game.deal_cards()
+    print('================================================')
     for player in game.players:
-        print(f'Player {player.id}: {player.show_hand()}')
+        print(f'Player {player.id}: {player.show_hands()}')
 
     print(dealer.show_upcard())
+    print('================================================')
 
     # Player's take their turns 
     for current_player in game.players:
-        first_turn = True
-        playing = True
-        while playing:
-            print(f'Player {current_player.id}: {current_player.show_hand()}')
-            if current_player.get_hand_value() == 21:
-                break
+        from deck import Card
+        for i, hand in enumerate(current_player.hands):
+            first_turn = True
+            playing = True
+            while playing:
+                print(f'Player {current_player.id} ({current_player.bet}): {current_player.show_hand(i)}')
+                if current_player.get_hand_value(i) == 21:
+                    print('Blackjack!') if first_turn else print('You\'ve hit 21!')
+                    break
 
-            action = sanitize(input(f'Player {current_player.id}. Would you like to Twist, Stand, or Double Down?: '))
+                print(f'Player {current_player.id}. What would you like to do?')
+                for action in current_player.list_available_actions(i, first_turn):
+                    print(f'-{action}')
 
-            if action not in game.actions:
-                print('Please enter "twist" "stand", or "double down".')
-                continue
+                action = sanitize(input('Enter your action: '))
 
-            playing = game.handle_action(current_player, action, first_turn)
+                if action not in current_player.actions:
+                    print('Please enter an action from the list.')
+                    continue
 
-            first_turn = False
-        print(f'Player {current_player.id} (final): {current_player.show_hand()}')
+                playing = game.handle_action(current_player, i, action)
+
+                player.reset_actions()
+
+                first_turn = True if action == 'split' else False
+            
+            print('================================================')
+            print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
+            print('================================================')
+
     # Dealer's turn
     print(f'Dealer. {dealer.show_hand()}')
 
     while dealer.get_hand_value() < dealer.limit:
         game.twist(dealer)
         print(f'Dealer. {dealer.show_hand()}')
-
+    print('================================================')
     # Resolve the round 
     for current_player in game.players:
-        current_player_balance = game.resolve_hand(dealer, current_player)
-        print(f'Player {current_player.id} money left: {current_player_balance}')
+        for i in range(len(player.hands)):
+            current_player_balance = game.resolve_hand(dealer, current_player, i-1)
+            print(f'Player {current_player.id} money left: {current_player_balance}')
     
+    print('================================================')
+
     for player in game.players:
-        if player.money_left == 0:
+        if player.chips == 0:
             print(f'Player {player.id} leaves the table.')
             game.players.remove(player)
         player.bet = 0
