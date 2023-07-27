@@ -18,18 +18,19 @@ class Game():
         self.deck.shuffle()
         for i in range(2):
             for player in self.players:
-                player.hand.append(self.deck.draw())
-            self.dealer.hand.append(self.deck.draw())
+                player.add_card(self.deck.draw())
+            self.dealer.add_card(self.deck.draw())
     
     def twist(self, player:Player):
         '''Adds a card to the players hand. Returns whether the new card busts them or not'''
         player.add_card(self.deck.draw())
 
         if player.get_hand_value() > 21:
-            for card in player.hand:
-                if card.value == 11:
-                    card.value = 1
-                    return player.bust
+            for hand in player.hands:
+                for card in hand:
+                    if card.value == 11:
+                        card.value = 1
+                        return player.bust
             player.bust = True
         return player.bust
 

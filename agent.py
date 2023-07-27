@@ -2,7 +2,7 @@ from abc import ABC
 
 class agent(ABC): 
     def __init__(self):
-        self.__hand = []
+        self.__hands = [[]]
         self.__bust = False
 
     @property
@@ -15,35 +15,44 @@ class agent(ABC):
         self.__bust = bust
     
     @property
-    def hand(self):
-        return self.__hand
+    def hands(self):
+        return self.__hands
     
-    @hand.setter
-    def hand(self, hand:list):
-        self.__hand = hand
+    @hands.setter
+    def hands(self, hands:list):
+        self.__hands = hands
         
-    def add_card(self, card):
-        self.hand.append(card)
+    def add_card(self, card, index=0):
+        self.__hands[index].append(card)
 
     def reset_hand(self):
-        self.__hand = []
+        self.__hands = [[]]
 
     def get_hand_value(self):
         hand_value = 0
         soft_ace = True
-        for card in self.hand:
-            hand_value += card.get_numerical_value(soft_ace)
-            if card.value == 'A':
-                soft_ace = False
-            if hand_value > 21 and not soft_ace:
-                hand_value -= 10
+        for hand in self.__hands:
+            for card in hand:
+                hand_value += card.get_numerical_value(soft_ace)
+                if card.value == 'A':
+                    soft_ace = False
+                if hand_value > 21 and not soft_ace:
+                    hand_value -= 10
 
         return hand_value
     
     def show_hand(self):
-        parts = [f'{card}' for card in self.__hand]
-        parts.append(f'Value: {self.get_hand_value()}')
+        parts = []
+        for hand in self.__hands:
+            parts.extend(f'{card}' for card in hand)
+            parts.append(f'Value: {self.get_hand_value()}')
         return ', '.join(parts)
+    
+    def split(self, hand_index):
+        # Move the second card of the indexed hand to a new hand at the end of the list of hands
+        self.__hands.append([self.__hands[hand_index][1]])
+        # Remove the split card from the initial hand
+        popped = self.__hands[hand_index].pop(1)
 
 class Player(agent):
     __id = 1
@@ -104,4 +113,4 @@ class Dealer(agent):
         return ' '.join(parts)
     
     def show_upcard(self):
-        return f'Dealer  : {self.hand[1]}'
+        return f'Dealer  : {self.hands[0][1]}'
