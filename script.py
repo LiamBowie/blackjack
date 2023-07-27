@@ -88,6 +88,7 @@ while people_at_the_table:
             
             print('================================================')
             print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
+            input('Press enter to continue')
             print('================================================')
 
     # Dealer's turn
@@ -99,10 +100,9 @@ while people_at_the_table:
     print('================================================')
     # Resolve the round 
     for current_player in game.players:
-        for i in range(len(player.hands)):
+        for i in range(len(current_player.hands)):
             current_player_balance = game.resolve_hand(dealer, current_player, i-1)
             print(f'Player {current_player.id} money left: {current_player_balance}')
-            print(current_player.bet)
     
     print('================================================')
 
