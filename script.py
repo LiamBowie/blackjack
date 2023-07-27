@@ -68,8 +68,6 @@ while people_at_the_table:
     game.deal_cards()
     # Player's take their turns 
     for current_player in game.players:
-        from deck import Card
-        current_player.hands = [[Card('8', 'Hearts'), Card('8', 'Diamonds')]]
         for i, hand in enumerate(current_player.hands):
             clear_screen()
             print('================================================')
