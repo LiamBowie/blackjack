@@ -42,11 +42,16 @@ while people_at_the_table:
         placing_bet = True
         while placing_bet: 
             try:
-                bet = int(sanitize(input(f'Player {player.id}. You have {player.chips} chips left. How much would you like to bet?: ')))
-                player.bet = [bet]
+                initial_bet = int(sanitize(input(f'Player {player.id}. You have {player.chips} chips left. How much would you like to bet?: ')))
             except ValueError:
-                print('You must enter an number that is less than the money you have left and more than 0.')
+                print('You must enter an number.')
                 continue
+
+            if initial_bet <= player.chips and initial_bet > 0:
+                player.add_initial_bet(initial_bet)
+            else:
+                print('You must bet less than your total number of chips and more than 0 chips.')
+                continue 
 
             placing_bet = False
 
@@ -87,9 +92,12 @@ while people_at_the_table:
                 first_turn = True if action == 'split' else False
             
             print('================================================')
-            print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
-            input('Press enter to continue')
+            if current_player.bust:
+                print(f'Player {current_player.id} (Bust): {current_player.show_hand(i)}')
+            else:
+                print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
             print('================================================')
+            input('Press enter to continue')
 
     # Dealer's turn
     print(f'Dealer. {dealer.show_hand()}')
