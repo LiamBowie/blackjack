@@ -64,23 +64,25 @@ while people_at_the_table:
 
             placing_bet = False
 
-    clear_screen()
-
     # Hands are dealt
     game.deal_cards()
     # Player's take their turns 
     for current_player in game.players:
-        print('================================================')
-        for player in game.players:
-            print(f'Player {player.id}: {player.show_hands()}')
-
-        print(dealer.show_upcard())
-        print('================================================')
+        from deck import Card
+        current_player.hands = [[Card('8', 'Hearts'), Card('8', 'Diamonds')]]
         for i, hand in enumerate(current_player.hands):
+            clear_screen()
+            print('================================================')
+            for player in game.players:
+                print(f'Player {player.id}: {player.show_hands()}')
+
+            print(dealer.show_upcard())
+            print('================================================')
             first_turn = True
             playing = True
             while playing:
                 print(f'Player {current_player.id} ({current_player.bet[i]}): {current_player.show_hand(i)}')
+
                 if current_player.get_hand_value(i) == 21:
                     print('Blackjack!') if first_turn else print('You\'ve hit 21!')
                     break
@@ -102,14 +104,12 @@ while people_at_the_table:
                 
                 first_turn = True if action == 'split' else False
             
-            print('================================================')
-            if current_player.bust:
-                print(f'Player {current_player.id} (Bust): {current_player.show_hand(i)}')
-            else:
-                print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
-            print('================================================')
-            input('Press enter to continue')
-            clear_screen()
+        print('================================================')
+        print(f'Player {current_player.id} (final): {current_player.show_hands()}')
+        print('Press enter to continue')
+        print('================================================')
+        input()
+        
     print('================================================')
     # Dealer's turn
     print(f'Dealer. {dealer.show_hand()}')
@@ -121,6 +121,7 @@ while people_at_the_table:
     for current_player in game.players:
         for i, _ in enumerate(current_player.hands):
             game.resolve_hand(dealer, current_player, i-1)
+        print()
     print('================================================')
 
     for player in game.players:
