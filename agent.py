@@ -36,8 +36,8 @@ class agent(ABC):
             hand_value += card.get_numerical_value(soft_ace)
             if card.value == 'A':
                 soft_ace = False
-            if hand_value > 21 and not soft_ace:
-                hand_value -= 10
+        if hand_value > 21 and not soft_ace:
+            hand_value -= 10
 
         return hand_value
     

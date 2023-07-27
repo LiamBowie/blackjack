@@ -61,7 +61,6 @@ while people_at_the_table:
 
     # Player's take their turns 
     for current_player in game.players:
-        from deck import Card
         for i, hand in enumerate(current_player.hands):
             first_turn = True
             playing = True
