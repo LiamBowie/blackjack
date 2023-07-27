@@ -42,7 +42,7 @@ while people_at_the_table:
         placing_bet = True
         while placing_bet: 
             try:
-                bet = int(sanitize(input(f'Player {player.id}. You have {player.chips}. How much would you like to bet?: ')))
+                bet = int(sanitize(input(f'Player {player.id}. You have {player.chips} chips left. How much would you like to bet?: ')))
                 player.initial_bet = bet
                 player.bet += player.initial_bet
             except ValueError:
