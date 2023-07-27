@@ -1,5 +1,6 @@
 from agent import Dealer, Player
 from game import Game
+import os
 
 # Constants
 MAX_SEATS = 5
@@ -8,7 +9,15 @@ MAX_SEATS = 5
 def sanitize(input):
     return input.strip().lower()
 
+def clear_screen():
+    # Check if the operating system is Windows
+    if os.name == 'nt':
+        os.system('cls')  # Use the 'cls' command to clear the screen on Windows
+    else:
+        os.system('clear')  # Use the 'clear' command to clear the screen on Unix-based systems
+
 # Game set up
+clear_screen()
 players = []
 people_at_the_table = True
 choosing_players = True
@@ -55,17 +64,18 @@ while people_at_the_table:
 
             placing_bet = False
 
+    clear_screen()
+
     # Hands are dealt
     game.deal_cards()
-    print('================================================')
-    for player in game.players:
-        print(f'Player {player.id}: {player.show_hands()}')
-
-    print(dealer.show_upcard())
-    print('================================================')
-
     # Player's take their turns 
     for current_player in game.players:
+        print('================================================')
+        for player in game.players:
+            print(f'Player {player.id}: {player.show_hands()}')
+
+        print(dealer.show_upcard())
+        print('================================================')
         for i, hand in enumerate(current_player.hands):
             first_turn = True
             playing = True
@@ -99,10 +109,10 @@ while people_at_the_table:
                 print(f'Player {current_player.id} (final): {current_player.show_hand(i)}')
             print('================================================')
             input('Press enter to continue')
-
+            clear_screen()
+    print('================================================')
     # Dealer's turn
     print(f'Dealer. {dealer.show_hand()}')
-
     while dealer.get_hand_value() < dealer.limit:
         game.twist(dealer)
         print(f'Dealer. {dealer.show_hand()}')
@@ -111,8 +121,7 @@ while people_at_the_table:
     for current_player in game.players:
         for i in range(len(current_player.hands)):
             current_player_balance = game.resolve_hand(dealer, current_player, i-1)
-            print(f'Player {current_player.id} money left: {current_player_balance}')
-    
+            player.reset_hand()
     print('================================================')
 
     for player in game.players:
@@ -133,3 +142,4 @@ while people_at_the_table:
 
     # Reset dealer's bust flag
     dealer.bust = False
+    clear_screen()

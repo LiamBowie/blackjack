@@ -55,43 +55,53 @@ class Game():
         dealer_hand = dealer.get_hand_value()
         dealer_blackjack = True if dealer_hand == 21 and len(dealer.hands[index]) == 2 else False
         
-        player.reset_hand()
-        dealer.reset_hand()
         # Player wins with Blackjack
         if player_blackjack and not dealer_blackjack:
-            print('Player wins with Blackjack!')
             player.bet[index] *= 1.5
             player.chips += round(player.bet[index])
-            return player.chips
+
+            print(f'Player {player.id} wins with Blackjack!')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (+{player.bet[index]})')
         
         # Player busts. Dealer wins 
         if player.bust:
-            print('Player busts. Dealer wins!')
             player.chips -= player.bet[index]
             player.bust = False
-            return player.chips
+
+            print(f'Player {player.id} busts. Dealer wins!')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (-{player.bet[index]})')
         
         # Dealer busts. Player wins
         if dealer.bust:
-            print('Dealer busts. Player wins!')
             player.chips += player.bet[index]
-            return player.chips
+
+            print(f'Dealer busts. Player {player.id} wins!')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (+{player.bet[index]})')
         
         # Nobody wins. The bet is returned
         if player_hand == dealer_hand:
-            print('It\'s a push! The bet is returned.')
-            return player.chips
+            print(f'It\'s a push! Player {player.id}\'s bet is returned.')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips}')
         
         # Player wins
         if player_hand > dealer_hand:
-            print('Player wins!')
             player.chips += player.bet[index]
-            return player.chips
+            
+            print(f'Player {player.id} wins!')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (+{player.bet[index]})')
+
         # Dealer wins
         else:
-            print('Dealer wins!')
             player.chips -= player.bet[index]
-            return player.chips
+            
+            print(f'Dealer wins! Player {player.id} loses')
+            print(player.show_hand(index))
+            print(f'Chips left: {player.chips} (-{player.bet[index]})')
 
     def __repr__(self):
         parts = []
