@@ -119,16 +119,18 @@ while people_at_the_table:
     print('================================================')
     # Resolve the round 
     for current_player in game.players:
-        for i in range(len(current_player.hands)):
-            current_player_balance = game.resolve_hand(dealer, current_player, i-1)
-            player.reset_hand()
+        for i, _ in enumerate(current_player.hands):
+            game.resolve_hand(dealer, current_player, i-1)
     print('================================================')
 
     for player in game.players:
         if player.chips == 0:
             print(f'Player {player.id} leaves the table.')
             game.players.remove(player)
+        player.reset_hand()
         player.bet = 0
+
+    dealer.reset_hand()
     
     if len(game.players) == 0:
         people_at_the_table == False
