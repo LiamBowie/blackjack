@@ -84,7 +84,7 @@ class Player(agent):
         return f'{self.__id}'
     
     def add_initial_bet(self, initial_bet):
-        self.bet[0] = initial_bet
+        self.bet = [initial_bet]
 
     def increase_bet(self, index, raised):
         if self.bet[index] <= self.chips and self.bet[index] >= 0:

@@ -83,12 +83,13 @@ while people_at_the_table:
 
                 if action not in current_player.actions:
                     print('Please enter an action from the list.')
+                    current_player.reset_actions()
                     continue
 
                 playing = game.handle_action(current_player, i, action)
 
-                player.reset_actions()
-
+                current_player.reset_actions()
+                
                 first_turn = True if action == 'split' else False
             
             print('================================================')
