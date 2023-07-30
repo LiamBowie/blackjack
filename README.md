@@ -2,6 +2,8 @@
 
 # Blackjack Project
 
+![image](https://github.com/LiamBowie/blackjack/assets/15195267/ea73f259-ec6a-47cf-9719-6281df155de3)
+
 ## Table of Contents
 
 - [Overview](#overview)
