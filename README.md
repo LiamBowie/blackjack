@@ -61,10 +61,6 @@ Once all hands have been played, the dealer takes their turn by twisting until t
 
 ## TODO: Examples
 
-## Usage
-
-*Provide any additional usage instructions, command-line arguments, or other relevant details here.*
-
 ## Dependencies
 
 The "Blackjack" project requires the following Python standard libraries:
