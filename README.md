@@ -1,5 +1,3 @@
-**README.md**
-
 # Blackjack Project
 
 ![image](https://github.com/LiamBowie/blackjack/assets/15195267/ea73f259-ec6a-47cf-9719-6281df155de3)
@@ -61,6 +59,14 @@ Once all hands have been played, the dealer takes their turn by twisting until t
 
 ## TODO: Examples
 
+![blackjack-split-2](https://github.com/LiamBowie/blackjack/assets/15195267/ac0ab14d-f084-4b5c-98d1-95805b8f1d43)
+
+All of the table information is listed at the top of the command line and is updated at the beginning of each hand. Notice that Player 3 has the chance to split on the first hand but on their second hand they do not have enough chips to split a second time so the option to split is not listed. 
+
+![blackjack-resolution](https://github.com/LiamBowie/blackjack/assets/15195267/4630ec1f-aba2-45e8-ae52-9231604fbd34)
+
+After the dealer plays their hand each player's resolution is listed with the new number of chips that they have available to them. 
+
 ## Dependencies
 
 The "Blackjack" project requires the following Python standard libraries:
@@ -72,5 +78,3 @@ The "Blackjack" project requires the following Python standard libraries:
 ## Contributing
 
 Contributions to the "Blackjack" project are welcome! If you find any issues or have suggestions for improvements, please submit a pull request.
-
-## TODO: Licensing
