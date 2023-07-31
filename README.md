@@ -57,7 +57,7 @@ Once all hands have been played, the dealer takes their turn by twisting until t
 - **Splitting Hands:** If a player's initial hand contains two cards of the same value and they have enough chips, they can split their hand and play two separate hands.
 - **Soft Aces:** Aces in a hand are counted as 11 if they don't cause the player to go bust; otherwise, they are counted as 1.
 
-## TODO: Examples
+## Examples
 
 ![blackjack-split-2](https://github.com/LiamBowie/blackjack/assets/15195267/ac0ab14d-f084-4b5c-98d1-95805b8f1d43)
 
